@@ -3,63 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
+    <title>Gradely | Student Management System</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Plus Jakarta Sans for branding/headings and Outfit for UI interface -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="auth-container" class="container">
+    <!-- Background Animated Gradient Orbs -->
+    <div class="bg-orbs">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content confirm-modal-content">
+            <div class="confirm-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h3 id="confirm-title">Are you sure?</h3>
+            <p id="confirm-message">This action cannot be undone.</p>
+            <div class="modal-buttons" style="justify-content: center; margin-top: 1.5rem;">
+                <button id="confirm-cancel-btn" class="btn secondary">Cancel</button>
+                <button id="confirm-success-btn" class="btn danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Container (Login View) -->
+    <div id="auth-container">
         <div class="card auth-card">
-            <h2>Login</h2>
+            <h2>Sign In</h2>
+            <p class="auth-subtitle">Access the Gradely Management Dashboard</p>
             <form id="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" required placeholder="Enter admin">
+                    <input type="text" id="username" required placeholder="Enter admin" autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="Enter password123">
+                    <input type="password" id="password" required placeholder="Enter password123" autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn primary">Login</button>
+                <button type="submit" class="btn primary" style="width: 100%; margin-top: 1rem;">
+                    Sign In
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 18px; height: 18px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </button>
                 <p id="login-error" class="error-text"></p>
             </form>
         </div>
     </div>
 
-    <div id="main-container" class="container" style="display: none;">
-        <header>
-            <h1>Student Management System</h1>
-            <div class="user-info">
-                <span id="user-display"></span>
-                <button id="logout-btn" class="btn secondary">Logout</button>
+    <!-- Main Container (Authenticated Dashboard View) -->
+    <div id="main-container" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span>Gradely.</span>
             </div>
-        </header>
 
-        <main>
-            <section class="actions">
-                <button id="add-student-btn" class="btn primary">Add New Student</button>
+            <ul class="nav-list">
+                <li>
+                    <a class="nav-item active" data-tab="overview">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zm10 0a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-item" data-tab="students">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <span>Students</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Theme Switch Panel -->
+            <div class="theme-switch-wrapper">
+                <button id="theme-toggle" class="theme-toggle-btn">
+                    <!-- Sun SVG -->
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                    <!-- Moon SVG -->
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <span>Theme</span>
+                </button>
+            </div>
+
+            <!-- Profile Info at Sidebar Bottom -->
+            <div class="user-profile">
+                <div class="avatar" id="sidebar-avatar">A</div>
+                <div class="profile-details">
+                    <span class="profile-name" id="sidebar-username">Admin</span>
+                    <span class="profile-role">System Manager</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Main View Dashboard -->
+        <main class="main-content">
+            <!-- Header bar -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button id="mobile-sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h2 id="view-title">Dashboard Overview</h2>
+                </div>
+                <div class="header-actions">
+                    <span id="user-display" style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted);"></span>
+                    <button id="logout-btn" class="btn secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: OVERVIEW PANEL -->
+            <section id="overview-panel" class="view-panel active">
+                <div class="stats-grid">
+                    <!-- Stat 1 -->
+                    <div class="card stat-card primary">
+                        <div class="stat-info">
+                            <span class="stat-label">Total Students</span>
+                            <span class="stat-val" id="stat-total-students">0</span>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="card stat-card success">
+                        <div class="stat-info">
+                            <span class="stat-label">Active Courses</span>
+                            <span class="stat-val" id="stat-active-courses">0</span>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="card stat-card accent">
+                        <div class="stat-info">
+                            <span class="stat-label">New Enrollments</span>
+                            <span class="stat-val" id="stat-recent-enrollments">0</span>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-section">
+                    <!-- Course Distribution Graphic -->
+                    <div class="card analytics-card">
+                        <h3>Course Distribution</h3>
+                        <div class="course-dist-list" id="course-distribution-container">
+                            <div class="empty-state" style="padding: 1rem 0;">
+                                <p>No course distribution data available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Overview Card -->
+                    <div class="card analytics-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <h3>Quick Actions & Info</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                                Welcome to Gradely, the premium academic administrative panel. You can oversee student directory records, track real-time statistics, export logs to CSV, and filter through courses with swift animations.
+                            </p>
+                        </div>
+                        <button class="btn primary" id="quick-add-student-btn" style="width: 100%;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Add New Student
+                        </button>
+                    </div>
+                </div>
             </section>
 
-            <section class="student-list">
-                <table id="student-table">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Course</th>
-                            <th>Enrollment Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="student-body">
-                        <!-- Data will be populated here -->
-                    </tbody>
-                </table>
+            <!-- TAB 2: STUDENTS PANEL (DIRECTORY) -->
+            <section id="students-panel" class="view-panel">
+                <!-- Filters and Quick Actions Bar -->
+                <div class="filter-bar">
+                    <!-- Real-Time Search wrapper -->
+                    <div class="search-input-wrapper-container">
+                        <div class="search-input-wrapper form-group" style="margin-bottom: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input type="text" id="search-student" class="card" placeholder="Search by name, email, or course..." style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                        </div>
+                        <button id="clear-filters-btn" class="btn secondary-glow" title="Clear search and active filters">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Clear Filters
+                        </button>
+                    </div>
+
+                    <!-- Dynamic drop downs and add buttons -->
+                    <div class="filter-controls">
+                        <select id="filter-course" class="select-dropdown card">
+                            <option value="">All Courses</option>
+                        </select>
+
+                        <button id="export-csv-btn" class="btn secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Export CSV
+                        </button>
+
+                        <button id="add-student-btn" class="btn primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Add Student
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Card Container -->
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table id="student-table">
+                            <thead>
+                                <tr>
+                                    <th data-sort="name">Student Name <span class="sort-icon-wrapper"><svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></span></th>
+                                    <th data-sort="email">Email <span class="sort-icon-wrapper"><svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></span></th>
+                                    <th data-sort="course">Course <span class="sort-icon-wrapper"><svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></span></th>
+                                    <th data-sort="enrollmentDate">Enrollment Date <span class="sort-icon-wrapper"><svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg></span></th>
+                                    <th style="cursor: default;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-body">
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
         </main>
 
-        <!-- Modal for Add/Edit -->
+        <!-- Overhauled Glass Edit/Add Modal Overlay -->
         <div id="student-modal" class="modal">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
@@ -68,21 +281,27 @@
                     <input type="hidden" id="student-id">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" required>
+                        <input type="text" id="firstName" required placeholder="e.g. John">
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" required>
+                        <input type="text" id="lastName" required placeholder="e.g. Doe">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" required>
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="e.g. john.doe@example.com">
                     </div>
                     <div class="form-group">
-                        <label for="course">Course</label>
-                        <input type="text" id="course" required>
+                        <label for="course">Course Field</label>
+                        <input type="text" id="course" required placeholder="e.g. Computer Science">
                     </div>
-                    <button type="submit" class="btn primary">Save</button>
+                    
+                    <div class="modal-buttons">
+                        <button type="button" class="btn secondary close-modal-btn">Cancel</button>
+                        <button type="submit" class="btn primary">
+                            Save Record
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
